@@ -1,31 +1,41 @@
-const form = document.getElementById('form-deposito');
+const form = document.getElementById("form-deposito");
+const nomeBeneficiario = document.getElementById("nome-beneficiario");
+let formEValido = false;
 
 function validaNome(nomeCompleto) {
-const nomeComoArray = nomeCompleto.split(' ');
-return nomeComoArray.lenght >= 2;
+  const nomeComoArray = nomeCompleto.split(' ');
+  return nomeComoArray.length >= 2;
 }
-form.addEventListener('submit', function(e){
-    let formEValido = false;
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
 
-e.preventDefault();
+  const numeroContaBeneficiario = document.getElementById("numero-conta");
+  const valorDeposito = document.getElementById("valor-deposito");
+  const mesagemSucesso = `Montante de: <b>${valorDeposito.value}</b> depositado para o cliente: <b>${nomeBeneficiario.value}</b> - conta: <b>${numeroContaBeneficiario.value}</b>`;
 
-const nomeBeneficiario = document.getElementById('nome-beneficiario');
-const numeroContaBeneficiario = document.getElementById ('numero-conta');
-const valorDeposito = document.getElementById('valor-deposito');
-const mesagemSucesso = `Montante de: ${valorDeposito.value} depositado para o cliente: ${nomeBeneficiario.value} - conta: ${numeroContaBeneficiario.value}`;
+  formEValido = validaNome(nomeBeneficiario.value);
+  if (formEValido) {
+    const containerMessagemSucesso = document.querySelector(".success-message");
+    containerMessagemSucesso.innerHTML = mesagemSucesso;
+    containerMessagemSucesso.style.display = "block";
 
-formEValido = validaNome(nomeBeneficiario.value)
-if (formEValido) {
-    alert (mensagemSucesso);
+    nomeBeneficiario.value = "";
+    numeroContaBeneficiario.value = "";
+    valorDeposito.value = "";
+  } else {
+    nomeBeneficiario.style.border = "1px solid red";
+    document.querySelector(".error-message").style.display = "block";
+  }
+});
+nomeBeneficiario.addEventListener('keyup', function(e) {
+  console.log(e.target.value);
+  formEValido = validaNome(e.target.value);
+  if (!formEValido) {
+    nomeBeneficiario.classList.add('error');
+    document.querySelector(".error-message").style.display = "block";
 
-    nomeBeneficiario.value = '';
-    numeroContaBeneficiario.value = '';
-    valorDeposito.value = '';
-
-
-} else {
-    alert ('O nome nao esta completo!');
-}
-})
-
-console.log(form);
+  } else {
+    nomeBeneficiario.classList.remove('error');
+    document.querySelector(".error-message").style.display = "none";
+  }
+});
